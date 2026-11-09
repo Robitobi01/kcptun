@@ -8,7 +8,7 @@ buildGoModule {
   pname = "kcptun";
   inherit version;
 
-  src = ./.;
+  src = pkgs.lib.cleanSource ./.;
 
   subPackages = [
     "client"

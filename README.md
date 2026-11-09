@@ -38,6 +38,7 @@
 - [Requirements](#requirements)
 - [QuickStart](#quickstart)
 - [Building from source](#building-from-source)
+- [NixOS](#nixos)
 - [Performance](#performance)
 - [Basic Tuning Guide](#basic-tuning-guide)
    - [To Improve Throughput](#to-improve-throughput)
@@ -58,6 +59,23 @@
 - [FAQ](#faq)
 - [References](#references)
 
+
+## NixOS
+
+`default.nix` builds the client and server. Import `nix/module.nix` from a
+commit-pinned checkout to configure reusable server instances; see
+[`nix/example.nix`](nix/example.nix). No flake is required.
+
+Each `services.kcptun.servers.NAME` creates `kcptun-server-NAME.service`.
+Configure `listen`, `target`, and any non-secret `settings` declaratively.
+Keep production settings in your private host configuration, not this repository.
+Open the required UDP ports in the host firewall.
+
+Create each `keyFile` separately on the host, owned by root with mode `0600`,
+containing the same pre-shared key as the client. Use a quoted absolute path,
+not a Nix path literal: secrets must never enter the Nix store. systemd loads
+the key as a credential, and the launcher passes it through `KCPTUN_KEY`, not
+process arguments. Restart the instance after changing its key file.
 
 ## Requirements
 
